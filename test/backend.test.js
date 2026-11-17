@@ -258,7 +258,7 @@ describe("newsletter, contact, and outbox", () => {
     const sent = resendCalls(calls)[0];
     assert.equal(header(sent.init, "Idempotency-Key"), job.idempotency_key);
     assert.equal(header(sent.init, "Authorization"), "Bearer test-resend-key");
-    assert.equal(payload(sent.init).from, "Roseva <support@roseva.com>");
+    assert.equal(payload(sent.init).from, "Rozeva Group <support@roseva.com>");
     assert.equal(payload(sent.init).reply_to, "support@roseva.com");
   });
 
@@ -399,7 +399,7 @@ describe("newsletter, contact, and outbox", () => {
     assert.match(jobs.results[1].text_body, /Dear <Ada>,/);
     assert.match(jobs.results[1].text_body, /We\u2019ve received your message,/);
     assert.match(jobs.results[1].text_body, /within the next 24 hours\./);
-    assert.match(jobs.results[1].text_body, /Roseva Team/);
+    assert.match(jobs.results[1].text_body, /Rozeva Group/);
     assert.equal(jobs.results[1].reply_to, "support@roseva.com");
     const sent = resendCalls(calls).map((call) => payload(call.init));
     assert.equal(sent.length, 2);

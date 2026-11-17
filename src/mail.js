@@ -1,6 +1,6 @@
 import { escapeHtml, randomToken, sha256Hex } from "./security.js";
 
-const FROM = "Roseva <support@roseva.com>";
+const FROM = "Rozeva Group <support@roseva.com>";
 const SUPPORT = "support@roseva.com";
 const MAX_ATTEMPTS = 5;
 const LOCK_MS = 2 * 60 * 1000;
@@ -69,8 +69,8 @@ function brandedHtml(origin, title, paragraphs, action) {
       <tr><td align="center" style="padding:32px 16px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
           <tr><td>
-            <img src="${logo}" alt="Roseva" width="45" height="48">
-            <p style="margin:12px 0;color:#f20606;letter-spacing:0.16em;font-size:12px;">ROSEVA</p>
+            <img src="${logo}" alt="Rozeva Group" width="45" height="48">
+            <p style="margin:12px 0;color:#f20606;letter-spacing:0.16em;font-size:12px;">ROZEVA GROUP</p>
             <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:#ffffff;">${escapeHtml(title)}</h1>
             ${body}
             ${button}
@@ -88,13 +88,13 @@ export async function newUnsubscribeCredential() {
 
 export function welcomeJob(origin, email, token, consentAt) {
   const url = unsubscribeUrl(origin, token);
-  const text = `Thank you for subscribing.\n\nYou\u2019re now subscribed to Roseva news and updates.\n\nUnsubscribe: ${url}`;
+  const text = `Thank you for subscribing.\n\nYou\u2019re now subscribed to Rozeva Group news and updates.\n\nUnsubscribe: ${url}`;
   return {
     kind: "welcome",
     recipient: email,
     replyTo: SUPPORT,
-    subject: "You\u2019re subscribed to Roseva",
-    html: brandedHtml(origin, "Thank you for subscribing", ["You\u2019re now subscribed to Roseva news and updates."], {
+    subject: "You\u2019re subscribed to Rozeva Group",
+    html: brandedHtml(origin, "Thank you for subscribing", ["You\u2019re now subscribed to Rozeva Group news and updates."], {
       href: url,
       label: "Unsubscribe"
     }),
@@ -115,7 +115,7 @@ export function reactivationJob(origin, email, token, tokenHash, now) {
     kind: "reactivation",
     recipient: email,
     replyTo: SUPPORT,
-    subject: "Confirm your Roseva subscription",
+    subject: "Confirm your Rozeva Group subscription",
     html: brandedHtml(
       origin,
       "Confirm your subscription",
@@ -141,13 +141,13 @@ export function contactJobs(message, now) {
   };
   const ackText = [
     `Dear ${message.firstName},`,
-    "Thank you for contacting Roseva. We\u2019ve received your message,",
+    "Thank you for contacting Rozeva Group. We\u2019ve received your message,",
     "and the relevant department will contact you within the next 24 hours.",
     "Best regards,",
-    "Roseva Team"
+    "Rozeva Group"
   ].join("\n");
   const internalText = [
-    "A visitor sent a message from the Roseva website.",
+    "A visitor sent a message from the Rozeva Group website.",
     `Name: ${message.firstName} ${message.lastName}`,
     `Email: ${message.email}`,
     `Mobile: ${message.mobile}`,
@@ -160,7 +160,7 @@ export function contactJobs(message, now) {
       kind: "contact_internal",
       recipient: SUPPORT,
       replyTo: message.email,
-      subject: "New message from the Roseva website",
+      subject: "New message from the Rozeva Group website",
       html: brandedHtml(message.origin || "https://roseva.com", "New website message", [
         `${safe.firstName} ${safe.lastName}`,
         `Email: ${safe.email}`,
@@ -181,8 +181,8 @@ export function contactJobs(message, now) {
       subject: "We received your message",
       html: brandedHtml(message.origin || "https://roseva.com", "We received your message", [
         `Dear ${safe.firstName},`,
-        "Thank you for contacting Roseva. We\u2019ve received your message,<br>and the relevant department will contact you within the next 24 hours.",
-        "Best regards,<br>Roseva Team"
+        "Thank you for contacting Rozeva Group. We\u2019ve received your message,<br>and the relevant department will contact you within the next 24 hours.",
+        "Best regards,<br>Rozeva Group"
       ]),
       text: ackText,
       headers: {},

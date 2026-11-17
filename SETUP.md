@@ -24,7 +24,7 @@ The Worker name is `roseva-holding`. Frontend files stay in `public/`. Backend s
 
    Both must be present. If either one is missing, both forms stay disabled and the API returns “temporarily unavailable”. Verification is never skipped.
 
-3. Confirm `support@roseva.com` is allowed to send through Resend. The sender is `Roseva <support@roseva.com>`.
+3. Confirm `support@roseva.com` is allowed to send through Resend. The sender is `Rozeva Group <support@roseva.com>`.
 
 4. Set `PUBLIC_SITE_URL` to the public site origin, such as `https://roseva.com`, before relying on links in email. Unsubscribe and confirmation links use that origin when it is set. They otherwise use the Worker request origin. They never use a URL submitted with the form.
 
