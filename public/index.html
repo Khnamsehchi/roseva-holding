@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roseva Group</title>
+  <meta name="description" content="Discover Roseva Group and the companies shaping our journey.">
+  <link rel="icon" href="assets/roseva-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" id="top">
+      <div class="header-inner">
+        <a class="brand" href="#top">
+          <img src="assets/roseva-logo.svg" alt="" width="45" height="48">
+          <span class="brand__name">Roseva</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <span class="nav-toggle__icon" aria-hidden="true"></span>
+          <span class="nav-toggle__label">Menu</span>
+        </button>
+        <nav id="site-nav" class="site-nav" aria-label="Primary">
+          <ul>
+            <li><a href="#companies">Our Companies</a></li>
+            <li><a href="#updates">Stay Updated</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <noscript>
+          <nav class="noscript-nav" aria-label="Sections">
+            <a href="#companies">Our Companies</a>
+            <a href="#updates">Stay Updated</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </noscript>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1" data-focus-target>
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero__glow" aria-hidden="true"></div>
+        <div class="wrap hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow">Roseva Group</p>
+            <h1 id="hero-heading">One Vision. Multiple Possibilities.</h1>
+            <p class="lede">Discover Roseva Group and the companies shaping our journey.</p>
+            <div class="button-row">
+              <a class="button button--primary" href="#companies">
+                Explore Our Companies
+                <svg class="button__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                  <path d="M4 10h12M12 6l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </a>
+              <a class="button button--secondary" href="#contact">Get in Touch</a>
+            </div>
+          </div>
+          <img class="hero__logo" src="assets/roseva-logo.svg" alt="Roseva" width="412" height="439">
+        </div>
+      </section>
+
+      <section id="companies" class="section" tabindex="-1" data-focus-target aria-labelledby="companies-heading">
+        <div class="wrap">
+          <h2 id="companies-heading">Our Companies</h2>
+          <div class="company-grid">
+            <article class="company-card">
+              <div>
+                <h3 class="company-wordmark">Roseva<span>FX</span></h3>
+                <p class="company-host">rosevafx.com</p>
+              </div>
+              <a class="button button--secondary" href="https://rosevafx.com" target="_blank" rel="noopener noreferrer">
+                Visit Website
+                <span class="visually-hidden"> for RosevaFX (opens in a new tab)</span>
+              </a>
+            </article>
+            <article class="company-card">
+              <div>
+                <h3 class="company-wordmark">Roseva <span>Motors</span></h3>
+                <p class="company-host">rosevamotors.com</p>
+              </div>
+              <a class="button button--secondary" href="https://rosevamotors.com" target="_blank" rel="noopener noreferrer">
+                Visit Website
+                <span class="visually-hidden"> for Roseva Motors (opens in a new tab)</span>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="updates" class="section section--inset" tabindex="-1" data-focus-target aria-labelledby="updates-heading">
+        <div class="wrap wrap--narrow">
+          <h2 id="updates-heading">Stay Connected with Roseva</h2>
+          <p class="lede">Subscribe to receive our latest news and updates.</p>
+          <form id="subscribe-form" class="form" method="post" action="#subscribe-form" data-endpoint="/api/subscribe" novalidate aria-describedby="subscribe-preview-note">
+            <p class="preview-banner" id="subscribe-preview-note">
+              <strong>Preview form.</strong> Nothing you enter is sent or saved.
+            </p>
+            <p class="form-status" id="subscribe-status"></p>
+            <div class="field">
+              <label for="subscribe-email">Email Address <span class="field-tag field-tag--required">Required</span></label>
+              <div class="inline-controls">
+                <input id="subscribe-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="254" required aria-describedby="subscribe-email-error">
+                <button class="button button--primary" type="submit">Subscribe</button>
+              </div>
+              <p class="field-error" id="subscribe-email-error" aria-live="polite"></p>
+            </div>
+            <p class="consent" id="subscribe-consent">
+              By subscribing, you ask to receive news and updates from Roseva. This preview does not send or save your email. Read the <a href="privacy-policy.html">Privacy Policy</a>.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section id="contact" class="section" tabindex="-1" data-focus-target aria-labelledby="contact-heading">
+        <div class="wrap wrap--form">
+          <h2 id="contact-heading">Let’s Connect</h2>
+          <form id="contact-form" class="form" method="post" action="#contact-form" data-endpoint="/api/contact" novalidate aria-describedby="contact-preview-note">
+            <p class="preview-banner" id="contact-preview-note">
+              <strong>Preview form.</strong> Nothing you enter is sent or saved.
+            </p>
+            <p class="form-status" id="contact-status"></p>
+            <p class="form-legend">Fields marked Required must be completed.</p>
+            <div class="form-grid">
+              <div class="field">
+                <label for="first-name">First Name <span class="field-tag field-tag--required">Required</span></label>
+                <input id="first-name" name="firstName" type="text" autocomplete="given-name" autocapitalize="words" maxlength="80" required aria-describedby="first-name-error">
+                <p class="field-error" id="first-name-error" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="last-name">Last Name <span class="field-tag field-tag--required">Required</span></label>
+                <input id="last-name" name="lastName" type="text" autocomplete="family-name" autocapitalize="words" maxlength="80" required aria-describedby="last-name-error">
+                <p class="field-error" id="last-name-error" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="contact-email">Email Address <span class="field-tag field-tag--required">Required</span></label>
+                <input id="contact-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="254" required aria-describedby="contact-email-error">
+                <p class="field-error" id="contact-email-error" aria-live="polite"></p>
+              </div>
+              <div class="field">
+                <label for="mobile">Mobile Number <span class="field-tag field-tag--required">Required</span></label>
+                <input id="mobile" name="mobile" type="tel" autocomplete="tel" inputmode="tel" autocapitalize="none" maxlength="24" required aria-describedby="mobile-hint mobile-error">
+                <p class="field-hint" id="mobile-hint">Include the country code, starting with +.</p>
+                <p class="field-error" id="mobile-error" aria-live="polite"></p>
+              </div>
+              <div class="field field--full">
+                <label for="company">Company Name <span class="field-tag">Optional</span></label>
+                <input id="company" name="company" type="text" autocomplete="organization" maxlength="120" aria-describedby="company-error">
+                <p class="field-error" id="company-error" aria-live="polite"></p>
+              </div>
+              <div class="field field--full">
+                <label for="message">Message <span class="field-tag">Optional</span></label>
+                <textarea id="message" name="message" rows="5" maxlength="2000" aria-describedby="message-error"></textarea>
+                <p class="field-error" id="message-error" aria-live="polite"></p>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="button button--primary" type="submit">Send Message</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <a class="brand" href="#top">
+          <img src="assets/roseva-logo.svg" alt="" width="45" height="48">
+          <span class="brand__name">Roseva</span>
+        </a>
+        <ul class="social-list">
+          <li>
+            <span class="social-item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M4.7 3.3A1.8 1.8 0 1 1 2.9 1.5a1.8 1.8 0 0 1 1.8 1.8zM2.2 8.2h3.6V22H2.2V8.2zM9 8.2h3.4v1.9h.1c.5-1 1.7-2 3.5-2 3.7 0 4.4 2.4 4.4 5.6V22H17v-6.6c0-1.6 0-3.6-2.2-3.6s-2.5 1.7-2.5 3.5V22H9V8.2z"></path>
+              </svg>
+              <span>LinkedIn — Coming soon</span>
+            </span>
+          </li>
+          <li>
+            <span class="social-item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 8.2A3.8 3.8 0 1 0 12 15.8 3.8 3.8 0 0 0 12 8.2zm0 6.2a2.4 2.4 0 1 1 0-4.8 2.4 2.4 0 0 1 0 4.8zM17.2 7.5a.9.9 0 1 1-1.8 0 .9.9 0 0 1 1.8 0z"></path>
+                <path fill="currentColor" d="M12 2.2c2.5 0 2.8 0 3.8.1 2.5.1 3.7 1.3 3.8 3.8.1 1 .1 1.3.1 3.8s0 2.8-.1 3.8c-.1 2.5-1.3 3.7-3.8 3.8-1 .1-1.3.1-3.8.1s-2.8 0-3.8-.1c-2.5-.1-3.7-1.3-3.8-3.8-.1-1-.1-1.3-.1-3.8s0-2.8.1-3.8c.1-2.5 1.3-3.7 3.8-3.8 1-.1 1.3-.1 3.8-.1zm0 1.8c-2.4 0-2.7 0-3.6.1-1.6.1-2.4.9-2.5 2.5-.1.9-.1 1.2-.1 3.6s0 2.7.1 3.6c.1 1.6.9 2.4 2.5 2.5.9.1 1.2.1 3.6.1s2.7 0 3.6-.1c1.6-.1 2.4-.9 2.5-2.5.1-.9.1-1.2.1-3.6s0-2.7-.1-3.6c-.1-1.6-.9-2.4-2.5-2.5-.9-.1-1.2-.1-3.6-.1z"></path>
+              </svg>
+              <span>Instagram — Coming soon</span>
+            </span>
+          </li>
+        </ul>
+        <div class="footer-meta">
+          <p>© 2026 Roseva Group</p>
+          <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="modal" id="preview-modal" aria-labelledby="preview-modal-title" aria-describedby="preview-modal-text">
+    <div class="modal__panel">
+      <p class="eyebrow">Preview</p>
+      <p class="modal__title" id="preview-modal-title">Preview only — your information has not been sent or saved.</p>
+      <p id="preview-modal-text">Close this message to return to the form.</p>
+      <button class="button button--primary" type="button" data-close-modal>Close</button>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
