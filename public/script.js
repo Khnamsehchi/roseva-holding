@@ -2,14 +2,19 @@
   "use strict";
 
   /*
-   * Preview only: valid forms do not call the network, and nothing is
-   * written to localStorage or the console.
-   * Set PREVIEW_ONLY to false once these endpoints exist:
+   * Forms call the Worker when /api/config reports that Turnstile is configured.
+   * Nothing is written to localStorage, and form values are not logged.
    *   POST /api/subscribe
    *   POST /api/contact
    */
-  var PREVIEW_ONLY = true;
   var DESKTOP_QUERY = "(min-width: 860px)";
+  var UNAVAILABLE = "Submissions are temporarily unavailable. Please try again later.";
+  var RESULTS = {
+    subscribed: "Thank you for subscribing! You\u2019re now subscribed to Roseva news and updates.",
+    already_subscribed: "You\u2019re already subscribed to Roseva news and updates.",
+    confirmation_required: "This address was unsubscribed. Check your email to confirm before it is subscribed again. It has not been reactivated.",
+    received: "Thank you! Your message has been received. The relevant department will contact you within 24 hours."
+  };
 
   var MESSAGES = {
     firstName: { missing: "Enter your first name." },
@@ -118,9 +123,102 @@
       firstInvalid.focus();
       return false;
     }
+    if (form.dataset.submissionsEnabled !== "true") {
+      setFormStatus(form, UNAVAILABLE);
+      return false;
+    }
+    if (!turnstileToken(form)) {
+      setFormStatus(form, "Complete the verification check before submitting.");
+      return false;
+    }
 
     setFormStatus(form, "");
     return true;
+  }
+
+  function turnstileToken(form) {
+    var slot = form.querySelector("[data-turnstile-slot]");
+    var input = slot ? slot.querySelector("[name='cf-turnstile-response']") : null;
+    return input ? input.value.trim() : "";
+  }
+
+  function resetTurnstile(form) {
+    if (window.turnstile && form.dataset.turnstileId) {
+      window.turnstile.reset(form.dataset.turnstileId);
+    }
+  }
+
+  function setBusy(form, busy) {
+    var button = form.querySelector("[type='submit']");
+    if (!button) {
+      return;
+    }
+    if (busy) {
+      if (!button.dataset.label) {
+        button.dataset.label = button.textContent;
+      }
+      button.textContent = "Please wait\u2026";
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      return;
+    }
+    if (button.dataset.label) {
+      button.textContent = button.dataset.label;
+    }
+    button.disabled = form.dataset.submissionsEnabled !== "true";
+    button.removeAttribute("aria-busy");
+  }
+
+  function applyServerFields(form, fields) {
+    var first = null;
+    var name = "";
+    if (!fields) {
+      return;
+    }
+    for (name in fields) {
+      if (!Object.prototype.hasOwnProperty.call(fields, name)) {
+        continue;
+      }
+      var input = form.querySelector("[name='" + CSS.escape(name) + "']");
+      if (!input || !input.matches("input, textarea")) {
+        continue;
+      }
+      setFieldError(input, fields[name]);
+      if (!first) {
+        first = input;
+      }
+    }
+    if (first) {
+      first.focus();
+    }
+  }
+
+  function clearFieldErrors(form) {
+    Array.prototype.forEach.call(form.querySelectorAll("input, textarea"), function (input) {
+      setFieldError(input, "");
+    });
+  }
+
+  function resetForm(form) {
+    form.reset();
+    form.dataset.submitted = "";
+    var requestId = form.querySelector("[name='requestId']");
+    if (requestId) {
+      requestId.value = "";
+    }
+    clearFieldErrors(form);
+    setFormStatus(form, "");
+    resetTurnstile(form);
+  }
+
+  function ensureRequestId(form) {
+    var input = form.querySelector("[name='requestId']");
+    if (!input) {
+      return;
+    }
+    if (!input.value) {
+      input.value = crypto.randomUUID();
+    }
   }
 
   function postForm(endpoint, form) {
@@ -129,35 +227,107 @@
       body: new FormData(form),
       headers: { Accept: "application/json" }
     }).then(function (response) {
-      if (!response.ok) {
-        throw new Error("Request was not accepted");
-      }
-      return response;
+      return response.json().catch(function () {
+        return {};
+      }).then(function (data) {
+        return { ok: response.ok, status: response.status, data: data };
+      });
     });
   }
 
   function submitForm(form) {
     var endpoint = form.getAttribute("data-endpoint");
     var button = form.querySelector("[type='submit']");
-    if (!validateForm(form)) {
+    if (!validateForm(form) || !endpoint) {
       return;
     }
-    if (PREVIEW_ONLY || !endpoint) {
-      openPreviewModal();
-      return;
-    }
-    if (button) {
-      button.disabled = true;
-    }
-    postForm(endpoint, form).then(function () {
-      setFormStatus(form, "The server accepted the request. This page does not confirm that an email was delivered.");
+    ensureRequestId(form);
+    setBusy(form, true);
+    postForm(endpoint, form).then(function (result) {
+      var data = result.data || {};
+      if (result.ok && RESULTS[data.result]) {
+        var restore = button;
+        var copy = RESULTS[data.result];
+        var splitAt = copy.indexOf("! ");
+        var noticeTitle = splitAt === -1 ? copy : copy.slice(0, splitAt + 1);
+        var noticeText = splitAt === -1 ? "" : copy.slice(splitAt + 2);
+        if (data.result === "subscribed" || data.result === "already_subscribed" || data.result === "received") {
+          resetForm(form);
+        }
+        openNotice(noticeTitle, noticeText, "Roseva", restore);
+        return;
+      }
+      form.dataset.submitted = "true";
+      applyServerFields(form, data.fields);
+      setFormStatus(form, typeof data.error === "string" && data.error.length < 240 ? data.error : "The request did not go through. Your information was not confirmed as sent or saved.");
+      resetTurnstile(form);
     }).catch(function () {
       setFormStatus(form, "The request did not go through. Your information was not confirmed as sent or saved.");
+      resetTurnstile(form);
     }).then(function () {
-      if (button) {
-        button.disabled = false;
-      }
+      setBusy(form, false);
     });
+  }
+
+  function loadTurnstile(siteKey) {
+    return new Promise(function (resolve, reject) {
+      if (window.turnstile) {
+        resolve();
+        return;
+      }
+      var script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.onload = function () {
+        resolve();
+      };
+      script.onerror = function () {
+        reject(new Error("verification unavailable"));
+      };
+      document.head.appendChild(script);
+      script.dataset.siteKey = siteKey;
+    });
+  }
+
+  function enableForm(form, siteKey) {
+    var slot = form.querySelector("[data-turnstile-slot]");
+    var notice = form.querySelector("[id$='preview-note']");
+    var button = form.querySelector("[type='submit']");
+    if (slot && window.turnstile) {
+      form.dataset.turnstileId = String(window.turnstile.render(slot, {
+        sitekey: siteKey,
+        action: form.getAttribute("data-turnstile-action") || "submit",
+        theme: "dark"
+      }));
+    }
+    form.dataset.submissionsEnabled = "true";
+    if (notice) {
+      notice.hidden = true;
+      notice.textContent = "";
+    }
+    if (button) {
+      button.disabled = false;
+    }
+  }
+
+  function configureForms() {
+    fetch("/api/config", { headers: { Accept: "application/json" } })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (config) {
+        if (!config || config.submissionsEnabled !== true || !config.turnstileSiteKey) {
+          return;
+        }
+        return loadTurnstile(config.turnstileSiteKey).then(function () {
+          Array.prototype.forEach.call(document.querySelectorAll("form[data-endpoint]"), function (form) {
+            enableForm(form, config.turnstileSiteKey);
+          });
+        });
+      })
+      .catch(function () {
+        return null;
+      });
   }
 
   function getFocusable(container) {
@@ -169,11 +339,23 @@
     );
   }
 
-  function openPreviewModal() {
-    if (!dialog || dialog.open) {
+  function openNotice(title, text, eyebrow, restoreFocus) {
+    var titleNode = document.getElementById("preview-modal-title");
+    var textNode = document.getElementById("preview-modal-text");
+    var eyebrowNode = document.getElementById("notice-eyebrow");
+    if (titleNode) {
+      titleNode.textContent = title || "";
+    }
+    if (textNode) {
+      textNode.textContent = text || "";
+    }
+    if (eyebrowNode) {
+      eyebrowNode.textContent = eyebrow || "Roseva";
+    }
+    if (!dialog || typeof dialog.showModal !== "function" || dialog.open) {
       return;
     }
-    lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    lastFocus = restoreFocus || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     dialog.showModal();
     if (page) {
       page.inert = true;
@@ -299,6 +481,8 @@
       });
     }
   });
+
+  configureForms();
 
   Array.prototype.forEach.call(document.querySelectorAll("form[data-endpoint]"), function (form) {
     form.addEventListener("submit", function (event) {

@@ -5,6 +5,17 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/unsubscribe", "/subscribe/confirm"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "roseva-holding-db",
+      "database_id": "4105b7c1-03a9-4e6c-9e27-3e334fcb4b25",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": ["* * * * *"]
   }
 }

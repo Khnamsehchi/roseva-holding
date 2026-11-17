@@ -93,21 +93,26 @@
         <div class="wrap wrap--narrow">
           <h2 id="updates-heading">Stay Connected with Roseva</h2>
           <p class="lede">Subscribe to receive our latest news and updates.</p>
-          <form id="subscribe-form" class="form" method="post" action="#subscribe-form" data-endpoint="/api/subscribe" novalidate aria-describedby="subscribe-preview-note">
-            <p class="preview-banner" id="subscribe-preview-note">
-              <strong>Preview form.</strong> Nothing you enter is sent or saved.
+          <form id="subscribe-form" class="form" method="post" action="#subscribe-form" data-endpoint="/api/subscribe" data-turnstile-action="subscribe" novalidate aria-describedby="subscribe-preview-note">
+            <p class="preview-banner" id="subscribe-preview-note" role="status">
+              <strong>Submissions are temporarily unavailable.</strong> Please try again later.
             </p>
             <p class="form-status" id="subscribe-status"></p>
             <div class="field">
               <label for="subscribe-email">Email Address <span class="field-tag field-tag--required">Required</span></label>
               <div class="inline-controls">
                 <input id="subscribe-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="254" required aria-describedby="subscribe-email-error">
-                <button class="button button--primary" type="submit">Subscribe</button>
+                <button class="button button--primary" type="submit" disabled>Subscribe</button>
               </div>
               <p class="field-error" id="subscribe-email-error" aria-live="polite"></p>
             </div>
+            <div class="turnstile-slot" data-turnstile-slot></div>
+            <div class="honeypot" aria-hidden="true">
+              <label for="subscribe-company-website">Company website</label>
+              <input id="subscribe-company-website" name="company_website" type="text" tabindex="-1" autocomplete="off" value="">
+            </div>
             <p class="consent" id="subscribe-consent">
-              By subscribing, you ask to receive news and updates from Roseva. This preview does not send or save your email. Read the <a href="privacy-policy.html">Privacy Policy</a>.
+              By subscribing, you ask to receive news and updates from Roseva. You can unsubscribe at any time. Read the <a href="privacy-policy.html">Privacy Policy</a>.
             </p>
           </form>
         </div>
@@ -116,9 +121,9 @@
       <section id="contact" class="section" tabindex="-1" data-focus-target aria-labelledby="contact-heading">
         <div class="wrap wrap--form">
           <h2 id="contact-heading">Let’s Connect</h2>
-          <form id="contact-form" class="form" method="post" action="#contact-form" data-endpoint="/api/contact" novalidate aria-describedby="contact-preview-note">
-            <p class="preview-banner" id="contact-preview-note">
-              <strong>Preview form.</strong> Nothing you enter is sent or saved.
+          <form id="contact-form" class="form" method="post" action="#contact-form" data-endpoint="/api/contact" data-turnstile-action="contact" novalidate aria-describedby="contact-preview-note">
+            <p class="preview-banner" id="contact-preview-note" role="status">
+              <strong>Submissions are temporarily unavailable.</strong> Please try again later.
             </p>
             <p class="form-status" id="contact-status"></p>
             <p class="form-legend">Fields marked Required must be completed.</p>
@@ -155,8 +160,14 @@
                 <p class="field-error" id="message-error" aria-live="polite"></p>
               </div>
             </div>
+            <div class="turnstile-slot" data-turnstile-slot></div>
+            <div class="honeypot" aria-hidden="true">
+              <label for="contact-company-website">Company website</label>
+              <input id="contact-company-website" name="company_website" type="text" tabindex="-1" autocomplete="off" value="">
+            </div>
+            <input type="hidden" name="requestId" value="">
             <div class="form-actions">
-              <button class="button button--primary" type="submit">Send Message</button>
+              <button class="button button--primary" type="submit" disabled>Send Message</button>
             </div>
           </form>
         </div>
@@ -198,9 +209,9 @@
 
   <dialog class="modal" id="preview-modal" aria-labelledby="preview-modal-title" aria-describedby="preview-modal-text">
     <div class="modal__panel">
-      <p class="eyebrow">Preview</p>
-      <p class="modal__title" id="preview-modal-title">Preview only — your information has not been sent or saved.</p>
-      <p id="preview-modal-text">Close this message to return to the form.</p>
+      <p class="eyebrow" id="notice-eyebrow">Roseva</p>
+      <p class="modal__title" id="preview-modal-title"></p>
+      <p id="preview-modal-text"></p>
       <button class="button button--primary" type="button" data-close-modal>Close</button>
     </div>
   </dialog>
